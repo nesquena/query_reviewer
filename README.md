@@ -66,8 +66,8 @@ The configuration file allows you to set configuration parameters shared across 
  * `profiling`: when enabled, runs the MySQL SET PROFILING=1 for queries longer than the `warn_duration_threshold` / 2.0
  * `production_data`: whether the duration of a query should be taken into account
  * `stack_trace_lines`: number of lines of call stack to include in the "short" version of the stack trace
- * `trace_includes_vendor`: whether the "short" verison of the stack trace should include files in /vendor
- * `trace_includes_lib`: whether the "short" verison of the stack trace should include files in /lib
+ * `trace_includes_vendor`: whether the "short" version of the stack trace should include files in /vendor
+ * `trace_includes_lib`: whether the "short" version of the stack trace should include files in /lib
  * `warn_severity`: the severity of problem that merits "WARNING" status
  * `critical_severity`: the severity of problem that merits "CRITICAL" status
  * `warn_query_count`: the number of queries in a single request that merits "WARNING" status
