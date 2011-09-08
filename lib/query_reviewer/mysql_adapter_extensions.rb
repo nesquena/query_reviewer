@@ -6,7 +6,7 @@ module QueryReviewer
       base.alias_method_chain :insert, :review
       base.alias_method_chain :delete, :review
     end
-
+    
     def update_with_review(sql, *args)
       t1 = Time.now
       result = update_without_review(sql, *args)
@@ -36,20 +36,10 @@ module QueryReviewer
 
       result
     end
-
-    # Silences the logger for the duration of the block.
-    def silence(logger)
-      begin
-        old_logger_level, logger.level = level, :error
-        yield self
-      ensure
-        self.level = old_logger_level
-      end
-    end
-
+    
     def select_with_review(sql, *args)
       sql.gsub!(/^SELECT /i, "SELECT SQL_NO_CACHE ") if QueryReviewer::CONFIGURATION["disable_sql_cache"]
-      silence(@logger) { execute("SET PROFILING=1") } if QueryReviewer::CONFIGURATION["profiling"]
+      @logger.silence { execute("SET PROFILING=1") } if QueryReviewer::CONFIGURATION["profiling"]
       t1 = Time.now
       query_results = select_without_review(sql, *args)
       t2 = Time.now
@@ -60,19 +50,19 @@ module QueryReviewer
 
         if use_profiling
           t5 = Time.now
-          silence(@logger) { execute("SET PROFILING=1") }
+          @logger.silence { execute("SET PROFILING=1") }
           t3 = Time.now
           select_without_review(sql, *args)
           t4 = Time.now
-          profile = silence(@logger) { select_without_review("SHOW PROFILE ALL", *args) }
-          silence(@logger) { execute("SET PROFILING=0") }
+          profile = @logger.silence { select_without_review("SHOW PROFILE ALL", *args) }
+          @logger.silence { execute("SET PROFILING=0") }
           t6 = Time.now
           Thread.current["queries"].overhead_time += t6 - t5
         else
           profile = nil
         end
 
-        cols = silence(@logger) do
+        cols = @logger.silence do
           select_without_review("explain #{sql}", *args)
         end
 
@@ -83,11 +73,11 @@ module QueryReviewer
       end
       query_results
     end
-
+    
     def query_reviewer_enabled?
       Thread.current["queries"] && Thread.current["queries"].respond_to?(:find_or_create_sql_query) && Thread.current["query_reviewer_enabled"]
     end
-
+    
     def create_or_add_query_to_query_reviewer!(sql, cols, run_time, profile, command = "SELECT", affected_rows = 1)
       if query_reviewer_enabled?
         t1 = Time.now
@@ -98,4 +88,3 @@ module QueryReviewer
     end
   end
 end
-
