@@ -33,5 +33,5 @@ if defined?(Rails::Railtie)
 else # Rails 2
   QueryReviewer.load_configuration
 
-  QueryReviewer.inject_reviewer
+  QueryReviewer.inject_reviewer if QueryReviewer.enabled?
 end
