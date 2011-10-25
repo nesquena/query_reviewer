@@ -20,6 +20,7 @@ module QueryReviewer
       end
 
       def syntax_highlighted_sql(sql)
+        sql = sql.to_sql if sql.respond_to?(:to_sql)
         if QueryReviewer::CONFIGURATION["uv"]
           uv_out = Uv.parse(sql, "xhtml", "sql_rails", false, "blackboard")
           uv_out.gsub("<pre class=\"blackboard\">", "<code class=\"sql\">").gsub("</pre>", "</code>")

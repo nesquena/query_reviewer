@@ -116,6 +116,7 @@ module QueryReviewer
 
     def self.sanitize_strings_and_numbers_from_sql(sql)
       new_sql = sql.clone
+      new_sql = new_sql.to_sql if new_sql.respond_to?(:to_sql)
       new_sql.gsub!(/\b\d+\b/, "N")
       new_sql.gsub!(/\b0x[0-9A-Fa-f]+\b/, "N")
       new_sql.gsub!(/''/, "'S'")
