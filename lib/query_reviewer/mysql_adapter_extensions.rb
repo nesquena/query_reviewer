@@ -39,7 +39,7 @@ module QueryReviewer
     
     def select_with_review(sql, *args)
       sql.gsub!(/^SELECT /i, "SELECT SQL_NO_CACHE ") if QueryReviewer::CONFIGURATION["disable_sql_cache"]
-      @logger.silence { execute("SET PROFILING=1") } if QueryReviewer::CONFIGURATION["profiling"]
+      QueryReviewer.safe_log { execute("SET PROFILING=1") } if QueryReviewer::CONFIGURATION["profiling"]
       t1 = Time.now
       query_results = select_without_review(sql, *args)
       t2 = Time.now
@@ -50,19 +50,19 @@ module QueryReviewer
 
         if use_profiling
           t5 = Time.now
-          @logger.silence { execute("SET PROFILING=1") }
+          QueryReviewer.safe_log { execute("SET PROFILING=1") }
           t3 = Time.now
           select_without_review(sql, *args)
           t4 = Time.now
-          profile = @logger.silence { select_without_review("SHOW PROFILE ALL", *args) }
-          @logger.silence { execute("SET PROFILING=0") }
+          profile = QueryReviewer.safe_log { select_without_review("SHOW PROFILE ALL", *args) }
+          QueryReviewer.safe_log { execute("SET PROFILING=0") }
           t6 = Time.now
           Thread.current["queries"].overhead_time += t6 - t5
         else
           profile = nil
         end
 
-        cols = @logger.silence do
+        cols = QueryReviewer.safe_log do
           select_without_review("explain #{sql}", *args)
         end
 

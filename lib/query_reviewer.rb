@@ -49,6 +49,15 @@ module QueryReviewer
   def self.enabled?
     CONFIGURATION["enabled"]
   end
+  
+  def self.safe_log(&block)
+    if Rails::VERSION::STRING.to_f >= 3.1
+      @logger.quietly { yield }
+    else
+      @logger.silence { yield }
+    end
+  end
+  
 end
 
 # Rails Integration
