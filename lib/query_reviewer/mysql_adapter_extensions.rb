@@ -6,7 +6,7 @@ module QueryReviewer
       base.alias_method_chain :insert, :review
       base.alias_method_chain :delete, :review
     end
-    
+
     def update_with_review(sql, *args)
       t1 = Time.now
       result = update_without_review(sql, *args)
@@ -36,8 +36,10 @@ module QueryReviewer
 
       result
     end
-    
+
     def select_with_review(sql, *args)
+      return select_without_review(sql, *args) unless query_reviewer_enabled?
+
       sql.gsub!(/^SELECT /i, "SELECT SQL_NO_CACHE ") if QueryReviewer::CONFIGURATION["disable_sql_cache"]
       QueryReviewer.safe_log { execute("SET PROFILING=1") } if QueryReviewer::CONFIGURATION["profiling"]
       t1 = Time.now
@@ -73,11 +75,11 @@ module QueryReviewer
       end
       query_results
     end
-    
+
     def query_reviewer_enabled?
       Thread.current["queries"] && Thread.current["queries"].respond_to?(:find_or_create_sql_query) && Thread.current["query_reviewer_enabled"]
     end
-    
+
     def create_or_add_query_to_query_reviewer!(sql, cols, run_time, profile, command = "SELECT", affected_rows = 1)
       if query_reviewer_enabled?
         t1 = Time.now
