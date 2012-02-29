@@ -12,9 +12,9 @@ module QueryReviewer
     CONFIGURATION.merge!(default_config["all"] || {})
     CONFIGURATION.merge!(default_config[Rails.env || "test"] || {})
 
-    app_config_file = Rails.root + "config/query_reviewer.yml"
+    app_config_file = File.join(Rails.root, 'config/query_reviewer.yml')
 
-    if app_config_file.exist?
+    if File.file?(app_config_file)
       app_config = YAML.load(ERB.new(IO.read(app_config_file)).result)
       CONFIGURATION.merge!(app_config["all"] || {})
       CONFIGURATION.merge!(app_config[Rails.env || "test"] || {})
@@ -64,3 +64,4 @@ end
 
 # Rails Integration
 require 'query_reviewer/rails' if defined?(Rails)
+

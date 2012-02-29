@@ -1,38 +1,38 @@
-	<p>Total queries: <span class="number"><%= @queries.query_count %></span>&nbsp;&nbsp;
+  <p>Total queries: <span class="number"><%= @queries.query_count %></span>&nbsp;&nbsp;
       <% if @total_time %>Total time: <span class="number" title="TOTAL TIME: <%= @total_time %>s  QR_OVERHEAD: <%= @queries.overhead_time %>s">
         <%= '%.3f' % (@total_time - @queries.overhead_time) %></span>s&nbsp;&nbsp;
       <% end %>
       MySQL Database Time: <span class="number"><%= '%.3f' % @queries.total_duration %></span>s</p>
-	<p class="indent">With warnings: <span class="number bad"><%= @queries.total_with_warnings %></span> (<%= @queries.percent_with_warnings %>%)</p>
-	<p class="indent">Without warnings: <span class="number good"><%= @queries.total_without_warnings %></span> (<%= @queries.percent_without_warnings %>%)</p>
+  <p class="indent">With warnings: <span class="number bad"><%= @queries.total_with_warnings %></span> (<%= @queries.percent_with_warnings %>%)</p>
+  <p class="indent">Without warnings: <span class="number good"><%= @queries.total_without_warnings %></span> (<%= @queries.percent_without_warnings %>%)</p>
   <p>Type:
       <% QueryReviewer::SqlQueryCollection::COMMANDS.each do |command| %>
         <% next if @queries.count_of_command(command).zero? %>
         <span class="number"><%= @queries.count_of_command(command) %></span> <%= command %>s&nbsp;&nbsp;
       <% end %>
   </p>
-	<% if warnings_no_query_sorted.length + queries_with_warnings_sorted.length > 0 %>
-		<div class="divider"></div>
-		<% if warnings_no_query_sorted_nonignored.length + queries_with_warnings_sorted_nonignored.length > 0 %>
-			<p class="title"><%= warnings_no_query_sorted_nonignored.length + queries_with_warnings_sorted_nonignored.length %> Errors:</p>
-			<ul>
-				<%= render :partial => "/warning_no_query", :collection => warnings_no_query_sorted_nonignored %>
-				<%= render :partial => "/query_with_warning", :collection => queries_with_warnings_sorted_nonignored %>
-			</ul>
-		<% end %>
-		<% if warnings_no_query_sorted_ignored.length + queries_with_warnings_sorted_ignored.length > 0 %>
-			<%= warnings_no_query_sorted_ignored.length + queries_with_warnings_sorted_ignored.length %> Warnings:
-			<ul id="query_review_ignored_warnings">
-				<%= render :partial => "/warning_no_query", :collection => warnings_no_query_sorted_ignored %>
-				<%= render :partial => "/query_with_warning", :collection => queries_with_warnings_sorted_ignored %>
-			</ul>
-		<% end %>
-	<% end %>
-	<div class="divider"></div>
-	<p class="title">Safe queries:</p>
-	<% if @queries.queries.empty? %>
-		No queries to display.
-	<% else %>
+  <% if warnings_no_query_sorted.length + queries_with_warnings_sorted.length > 0 %>
+    <div class="divider"></div>
+    <% if warnings_no_query_sorted_nonignored.length + queries_with_warnings_sorted_nonignored.length > 0 %>
+      <p class="title"><%= warnings_no_query_sorted_nonignored.length + queries_with_warnings_sorted_nonignored.length %> Errors:</p>
+      <ul>
+        <%= render :partial => "/warning_no_query", :collection => warnings_no_query_sorted_nonignored %>
+        <%= render :partial => "/query_with_warning", :collection => queries_with_warnings_sorted_nonignored %>
+      </ul>
+    <% end %>
+    <% if warnings_no_query_sorted_ignored.length + queries_with_warnings_sorted_ignored.length > 0 %>
+      <%= warnings_no_query_sorted_ignored.length + queries_with_warnings_sorted_ignored.length %> Warnings:
+      <ul id="query_review_ignored_warnings">
+        <%= render :partial => "/warning_no_query", :collection => warnings_no_query_sorted_ignored %>
+        <%= render :partial => "/query_with_warning", :collection => queries_with_warnings_sorted_ignored %>
+      </ul>
+    <% end %>
+  <% end %>
+  <div class="divider"></div>
+  <p class="title">Safe queries:</p>
+  <% if @queries.queries.empty? %>
+    No queries to display.
+  <% else %>
     <% QueryReviewer::SqlQueryCollection::COMMANDS.reverse.each do |command| %>
       <% next if @queries.count_of_command(command, true).zero? %>
       <ul class="small">
@@ -43,7 +43,7 @@
           <% end %>
           <% if query.count > 1 %>
             <b title="<%= query.count %> queries were executed with the same stack trace and similar SQL structure">
-              <%= query.count  %> identical queries
+              <%= query.count  %> near-identical queries
             </b>
           <% end %>
           <%= render :partial => "/query_sql", :locals=>{ :query_sql => query } %>
@@ -71,3 +71,4 @@
     <% end %>
   <% end %>
   <p id="query_review_disable_link"><a href="javascript: eraseCookie('query_review_enabled'); query_review_hide('query_review_disable_link'); alert('Cookie successfully set.');">Disable analysis report</a> on next page load and from now on.</p>
+
