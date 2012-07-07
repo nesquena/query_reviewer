@@ -62,6 +62,9 @@ module QueryReviewer
     alias_method :process_action_with_query_review, :perform_action_with_query_review
 
     def process_with_query_review(*args) #:nodoc:
+      Thread.current["query_reviewer_enabled"] = (CONFIGURATION["enabled"] == true               and cookies["query_review_enabled"]) ||
+                                                 (CONFIGURATION["enabled"] == "based_on_session" and session["query_review_enabled"])
+
       Thread.current["queries"] = SqlQueryCollection.new
       process_without_query_review(*args)
     end
