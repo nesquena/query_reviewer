@@ -11,7 +11,7 @@
       <% end  %>
     <% end %>
 </code>
-<a href="javascript: query_review_toggle('trace_<%= query_id %>_abridged'); query_review_toggle('trace_<%= query_id %>_full')" title="show full trace">FULL</a>
+<a href="#" onclick="query_review_toggle('trace_<%= query_id %>_abridged'); query_review_toggle('trace_<%= query_id %>_full')" title="show full trace">FULL</a>
 </div>
 
 <div class="trace" style="display: none; max-height: 300px; overflow: scroll" id="trace_<%= query_id %>_full">
@@ -27,5 +27,5 @@
     <% end  %>
   <% end %>
 </code>
-<a href="javascript: query_review_toggle('trace_<%= query_id %>_abridged'); query_review_toggle('trace_<%= query_id %>_full')" title="show short trace">SHORT</a>
+<a href="#" onclick="query_review_toggle('trace_<%= query_id %>_abridged'); query_review_toggle('trace_<%= query_id %>_full')" title="show short trace">SHORT</a>
 </div>

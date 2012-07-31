@@ -16,19 +16,19 @@
 			<% query_with_warning.warnings.sort{|a,b| a.severity <=> b.severity}.reverse.each_with_index do |warn, index| %>
 				<span style="color: <%= severity_color warn.severity%>;" title="<%= warn.desc%>"><%= warn.problem %></span><%= ", " if index < query_with_warning.warnings.length - 1 %>
 			<% end %>
-			<a href="javascript: query_review_toggle('warning_<%= query_with_warning.id %>_desc')" title="show/hide warning message">MSG</a>
-			<a href="javascript: query_review_toggle('warning_<%= query_with_warning.id %>_sql')" title="show/hide sql">SQL</a>
+			<a href="#" onclick="query_review_toggle('warning_<%= query_with_warning.id %>_desc')" title="show/hide warning message">MSG</a>
+			<a href="#" onclick="query_review_toggle('warning_<%= query_with_warning.id %>_sql')" title="show/hide sql">SQL</a>
       <% if query_with_warning.select? %>
-      	<a href="javascript: query_review_toggle('warning_<%= query_with_warning.id %>_explain')" title="show/hide explain output">EXPLN</a>
+      	<a href="#" onclick="query_review_toggle('warning_<%= query_with_warning.id %>_explain')" title="show/hide explain output">EXPLN</a>
       <% end %>
       <% if QueryReviewer::CONFIGURATION["profiling"] && query_with_warning.profile %>
-  			<a href="javascript: query_review_toggle('warning_<%= query_with_warning.id %>_profile')" title="show/hide profile output">PROF</a>
+  			<a href="#" onclick="query_review_toggle('warning_<%= query_with_warning.id %>_profile')" title="show/hide profile output">PROF</a>
       <% end %>
-      <a href="javascript: query_review_toggle('warning_<%= query_with_warning.id %>_trace')" title="show/hide stack trace">TRACE</a>
+      <a href="#" onclick="query_review_toggle('warning_<%= query_with_warning.id %>_trace')" title="show/hide stack trace">TRACE</a>
 			<% if ignore_hash?(query_with_warning.to_hash) %>
-				<a href="javascript: remove_ignore_hash('<%= query_with_warning.to_hash %>'); query_review_hide('query_<%= query_with_warning.id %>')" title="stop ignore this query from now on">UNIGNR</a>
+				<a href="#" onclick="remove_ignore_hash('<%= query_with_warning.to_hash %>'); query_review_hide('query_<%= query_with_warning.id %>')" title="stop ignore this query from now on">UNIGNR</a>
 			<% else %>
-				<a href="javascript: add_ignore_hash('<%= query_with_warning.to_hash %>'); query_review_hide('query_<%= query_with_warning.id %>')" title="ignoring this query from now on">IGNR</a>
+				<a href="#" onclick="add_ignore_hash('<%= query_with_warning.to_hash %>'); query_review_hide('query_<%= query_with_warning.id %>')" title="ignoring this query from now on">IGNR</a>
 			<% end %>
 		</p>
 	</div>

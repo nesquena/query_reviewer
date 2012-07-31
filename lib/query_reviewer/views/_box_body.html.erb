@@ -48,12 +48,12 @@
           <% end %>
           <%= render :partial => "/query_sql", :locals=>{ :query_sql => query } %>
             <% if query.select? %>
-              <a href="javascript: query_review_toggle('warning_<%= query.id %>_explain')" title="show/hide sql">EXPLN</a>
+              <a href="#" onclick="query_review_toggle('warning_<%= query.id %>_explain')" title="show/hide sql">EXPLN</a>
             <% end %>
             <% if QueryReviewer::CONFIGURATION["profiling"] && query.profile %>
-              <a href="javascript: query_review_toggle('warning_<%= query.id %>_profile')" title="show/hide profile">PROF</a>
+              <a href="#" onclick="query_review_toggle('warning_<%= query.id %>_profile')" title="show/hide profile">PROF</a>
             <% end %>
-            <a href="javascript: query_review_toggle('warning_<%= query.id %>_trace')" title="show/hide stack trace">TRACE</a>
+            <a href="#" onclick="query_review_toggle('warning_<%= query.id %>_trace')" title="show/hide stack trace">TRACE</a>
             <div style="display: none" id="warning_<%= query.id %>_explain" class="indent small tbpadded">
               <%= render :partial => "/explain", :locals => {:query => query} %>
             </div>
@@ -70,4 +70,4 @@
       </ul>
     <% end %>
   <% end %>
-  <p id="query_review_disable_link"><a href="javascript: eraseCookie('query_review_enabled'); query_review_hide('query_review_disable_link'); alert('Cookie successfully set.');">Disable analysis report</a> on next page load and from now on.</p>
+  <p id="query_review_disable_link"><a href="#" onclick="eraseCookie('query_review_enabled'); query_review_hide('query_review_disable_link'); alert('Cookie successfully set.');">Disable analysis report</a> on next page load and from now on.</p>
