@@ -46,7 +46,7 @@ module QueryReviewer
       query_results = select_without_review(sql, *args)
       t2 = Time.now
 
-      if @logger && sql =~ /^select/i && query_reviewer_enabled?
+      if @logger && query_reviewer_enabled? && sql =~ /^select/i
         use_profiling = QueryReviewer::CONFIGURATION["profiling"]
         use_profiling &&= (t2 - t1) >= QueryReviewer::CONFIGURATION["warn_duration_threshold"].to_f / 2.0 if QueryReviewer::CONFIGURATION["production_data"]
 
