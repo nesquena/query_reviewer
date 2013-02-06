@@ -30,8 +30,6 @@ module QueryReviewer
     end
 
     def add_query_output_to_view(total_time)
-      return unless Thread.current["query_reviewer_enabled"]
-
       if request.xhr?
         if cookies["query_review_enabled"]
           if !response.content_type || response.content_type.include?("text/html")
@@ -41,7 +39,7 @@ module QueryReviewer
           end
         end
       else
-        if response.body.is_a?(String) && response.body.match(/<\/body>/i) && Thread.current["queries"]
+        if response.body.is_a?(String) && response.body.match(/<\/body>/i)
           idx = (response.body =~ /<\/body>/i)
           html = query_review_output(false, total_time)
           response.body = response.body.insert(idx, html)
@@ -50,8 +48,8 @@ module QueryReviewer
     end
 
     def perform_action_with_query_review(*args)
-      Thread.current["query_reviewer_enabled"] = (CONFIGURATION["enabled"] == true               and cookies["query_review_enabled"]) ||
-                                                 (CONFIGURATION["enabled"] == "based_on_session" and session["query_review_enabled"])
+      return unless (CONFIGURATION["enabled"] == true               and cookies["query_review_enabled"]) ||
+                    (CONFIGURATION["enabled"] == "based_on_session" and session["query_review_enabled"])
 
       t1 = Time.now
       r = defined?(Rails::Railtie) ? process_action_without_query_review(*args) : perform_action_without_query_review(*args)
