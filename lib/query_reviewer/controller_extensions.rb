@@ -48,8 +48,7 @@ module QueryReviewer
     end
 
     def perform_action_with_query_review(*args)
-      return unless (CONFIGURATION["enabled"] == true               and cookies["query_review_enabled"]) ||
-                    (CONFIGURATION["enabled"] == "based_on_session" and session["query_review_enabled"])
+      Thread.current["query_reviewer_enabled"] = query_reviewer_output_enabled?
 
       t1 = Time.now
       r = defined?(Rails::Railtie) ? process_action_without_query_review(*args) : perform_action_without_query_review(*args)
@@ -62,6 +61,13 @@ module QueryReviewer
     def process_with_query_review(*args) #:nodoc:
       Thread.current["queries"] = SqlQueryCollection.new
       process_without_query_review(*args)
+    end
+
+    # @return [Boolean].  Returns whether or not the user has indicated that query_reviewer output is enabled
+    def query_reviewer_output_enabled?
+      cookie_enabled = (CONFIGURATION["enabled"] == true and cookies["query_review_enabled"])
+      session_enabled = (CONFIGURATION["enabled"] == "based_on_session" and session["query_review_enabled"])
+      return cookie_enabled || session_enabled
     end
   end
 end
