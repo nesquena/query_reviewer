@@ -1,4 +1,4 @@
-# QueryReviewer #
+    # QueryReviewer #
 
 ## Introduction ##
 
@@ -49,7 +49,7 @@ All you have to do is install it into your Rails 2 or 3 project.
 Right now if you use bundler, simply add this to your Gemfile:
 
     # Gemfile
-    gem "query_reviewer", :git => "git://github.com/nesquena/query_reviewer.git"
+    gem "query_reviewer"
 
 If you are not using bundler, you might want to [start using it](http://gembundler.com/rails23.html). You can also install this as a plugin:
 
