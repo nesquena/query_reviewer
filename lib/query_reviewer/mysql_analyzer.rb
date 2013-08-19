@@ -34,7 +34,7 @@ module QueryReviewer
     def analyze_key!
       if self.key == "const"
         praise "Way to go!"
-      elsif self.key.blank? && !self.extra.include?("select tables optimized away")
+      elsif self.key.blank? && !self.extra.include?("select tables optimized away") && !self.extra.include?("impossible where noticed after reading const tables")
         warn :severity => 6, :field => "key", :desc => "No index was used here. In this case, that meant scanning #{self.rows} rows."
       end
     end
