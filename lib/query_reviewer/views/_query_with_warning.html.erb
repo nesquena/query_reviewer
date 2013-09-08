@@ -12,12 +12,15 @@
             <%= query_with_warning.count  %> identical queries
         </b>
       <% end %>
-      <i>Table <%= (query_with_warning.warnings.detect {|w| !w.table.blank? } || query_with_warning.warnings.last).table %>:</i>
-			<% query_with_warning.warnings.sort{|a,b| a.severity <=> b.severity}.reverse.each_with_index do |warn, index| %>
-				<span style="color: <%= severity_color warn.severity%>;" title="<%= warn.desc%>"><%= warn.problem %></span><%= ", " if index < query_with_warning.warnings.length - 1 %>
-			<% end %>
-			<a href="#" onclick="query_review_toggle('warning_<%= query_with_warning.id %>_desc')" title="show/hide warning message">MSG</a>
-			<a href="#" onclick="query_review_toggle('warning_<%= query_with_warning.id %>_sql')" title="show/hide sql">SQL</a>
+      <i>Table <%= (query_with_warning.warnings.detect {|w| !w.table.blank? } || query_with_warning.warnings.last).table.presence || 'unknown'%>:</i>
+      <% query_with_warning.warnings.sort{|a,b| a.severity <=> b.severity}.reverse.each_with_index do |warn, index| %>
+        <span style = "color: <%= severity_color warn.severity%>;" title="<%= warn.desc%>"><%= warn.problem %></span><%= ", " if index < query_with_warning.warnings.length - 1 %>
+      <% end %>
+      <% if query_with_warning.warnings.any?{|w|w.desc.present?} %>
+        <a href      = "#" onclick="query_review_toggle('warning_<%= query_with_warning.id %>_desc')" title="show/hide warning message">MSG</a>
+      <% end %>
+      <a href      = "#" onclick="query_review_toggle('warning_<%= query_with_warning.id %>_sql')" title="show/hide sql">SQL</a>
+
       <% if query_with_warning.select? %>
       	<a href="#" onclick="query_review_toggle('warning_<%= query_with_warning.id %>_explain')" title="show/hide explain output">EXPLN</a>
       <% end %>

@@ -17,11 +17,14 @@ module QueryReviewer
       result
     end
 
-    def insert_with_review(sql, *args)
+    def insert_with_review(arel, name = nil, pk = nil, id_value = nil, sequence_name = nil, binds = [])
+      bind_params = binds.clone
+
       t1 = Time.now
-      result = insert_without_review(sql, *args)
+      result = insert_without_review(arel, name, pk, id_value, sequence_name, binds)
       t2 = Time.now
 
+      sql = to_sql(arel, bind_params)
       create_or_add_query_to_query_reviewer!(sql, nil, t2 - t1, nil, "INSERT")
 
       result
