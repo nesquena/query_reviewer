@@ -17,14 +17,18 @@ module QueryReviewer
       result
     end
 
-    def insert_with_review(arel, name = nil, pk = nil, id_value = nil, sequence_name = nil, binds = [])
-      bind_params = binds.clone
+    def insert_with_review(arg1, *otherargs)
+      # arg1 is sql for rails 3.0 & 3.1, arel for newer versions
+
+      rails30 = Rails::VERSION::MAJOR == 3 && [0,1].include?(Rails::VERSION::MINOR)
+      sql = arg1 if rails30
+      bind_params = otherargs[4] || [] unless rails30
 
       t1 = Time.now
-      result = insert_without_review(arel, name, pk, id_value, sequence_name, binds)
+      result = insert_without_review(arg1, *otherargs)
       t2 = Time.now
 
-      sql = to_sql(arel, bind_params)
+      sql = to_sql(arg1, bind_params) unless rails30
       create_or_add_query_to_query_reviewer!(sql, nil, t2 - t1, nil, "INSERT")
 
       result
