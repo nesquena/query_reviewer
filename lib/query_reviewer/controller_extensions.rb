@@ -39,7 +39,8 @@ module QueryReviewer
           end
         end
       else
-        if response.body.is_a?(String) && response.body.match(/<\/body>/i)
+        if !response.instance_eval{ @body.is_a?(File) || @body.is_a?(Enumerator) } &&
+             response.body.is_a?(String) && response.body.match(/<\/body>/i)
           idx = (response.body =~ /<\/body>/i)
           html = query_review_output(false, total_time)
           response.body = response.body.insert(idx, html)
